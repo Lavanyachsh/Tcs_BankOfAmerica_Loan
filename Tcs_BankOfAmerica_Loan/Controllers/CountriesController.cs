@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Tcs_BankOfAmerica_Loan.DTOS;
+using Tcs_BankOfAmerica_Loan.Entities;
 using Tcs_BankOfAmerica_Loan.interfaces;
 
 namespace Tcs_BankOfAmerica_Loan.Controllers
@@ -18,11 +20,10 @@ namespace Tcs_BankOfAmerica_Loan.Controllers
         {
             try
             {
-                var studentData = await _countriesService.GetAllCountriesDetails();
-                //var employeeData = _EmployeeManager.GetAllEmployeeDetails();
-                if (studentData != null)
+                var countryData = await _countriesService.GetAllCountriesDetails();
+                if (countryData != null)
                 {
-                    return StatusCode(StatusCodes.Status200OK, studentData);
+                    return StatusCode(StatusCodes.Status200OK, countryData);
                 }
                 else
                 {
@@ -34,6 +35,99 @@ namespace Tcs_BankOfAmerica_Loan.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "System or Server Error");
             }
         }
+        [HttpPost]
+        [Route("AddCountryDetails")]
+        public async Task<IActionResult> Post([FromBody] CountriesDto countriesdtoobj)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+                }
+                var countryData = await _countriesService.AddCountryDetails(countriesdtoobj);
+                return StatusCode(StatusCodes.Status201Created, "country Details Added Succesfully");
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "System or Server Error");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetCountriesDetailsById/{id}")]
+        public async Task<IActionResult> Get(int id)
+        {
+            if (id < 0)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, "Bad input request");
+            }
+            try
+            {
+                var countryData = await _countriesService.GetCountriesDetailsById(id);
+                if (countryData == null)
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, "country Id not found");
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status200OK, countryData);
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "System or Server Error");
+            }
+        }
+
+        [HttpDelete]
+        [Route("DeleteCountryDetilsById/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            if (id < 0)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, "Bad input request");
+            }
+
+            try
+            {
+                var countryData = await _countriesService.DeleteCountryDetilsById(id);
+                if (countryData == null)
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, "country Id not found");
+                }
+                else
+                {
+                    var Data = await _countriesService.DeleteCountryDetilsById(id);
+                    return StatusCode(StatusCodes.Status204NoContent, "country details deleted successfully");
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "System or Server Error");
+            }
+        }
+
+        [HttpPut]
+        [Route("UpdateCountryDetils")]
+        public async Task<IActionResult> PUT([FromBody] CountriesDto countriesdtoobj)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+                }
+                var countryData = await _countriesService.UpdateCountryDetils(countriesdtoobj);
+                return StatusCode(StatusCodes.Status201Created, "country Details Updated Succesfully");
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "System or Server Error");
+            }
+        }
+
+
 
         [HttpGet]
         [Route("currentdatetime")]//restful API method
