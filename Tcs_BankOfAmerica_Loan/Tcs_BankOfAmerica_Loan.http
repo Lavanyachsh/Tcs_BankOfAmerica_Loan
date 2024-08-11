@@ -1,0 +1,6 @@
+@Tcs_BankOfAmerica_Loan_HostAddress = http://localhost:5064
+
+GET {{Tcs_BankOfAmerica_Loan_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
