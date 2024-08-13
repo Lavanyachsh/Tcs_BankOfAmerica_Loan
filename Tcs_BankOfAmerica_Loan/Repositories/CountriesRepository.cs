@@ -4,6 +4,7 @@ using Tcs_BankOfAmerica_Loan.Entities;
 using Tcs_BankOfAmerica_Loan.interfaces;
 namespace Tcs_BankOfAmerica_Loan.Repositories
 {
+
     public class CountriesRepository : ICountriesRepository
     {
         //windows authentication connection string
@@ -76,7 +77,7 @@ namespace Tcs_BankOfAmerica_Loan.Repositories
 
         public async Task<Countries> GetCountriesDetailsById(int id)
         {
-            Countries student = new Countries();
+            Countries countries = new Countries();
 
             using (SqlConnection con = new SqlConnection(connectionString))
             {
@@ -90,12 +91,12 @@ namespace Tcs_BankOfAmerica_Loan.Repositories
 
                 while (rdr.Read())
                 {
-                    student.id = Convert.ToInt32(rdr["id"]);
-                    student.countryName = rdr["countryName"].ToString();
+                    countries.id = Convert.ToInt32(rdr["id"]);
+                    countries.countryName = rdr["countryName"].ToString();
                     
                 }
             }
-            return student;
+            return countries;
         }
 
         public async Task<bool> UpdateCountryDetils(Countries countryDetail)
